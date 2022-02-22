@@ -1,45 +1,98 @@
-# A Neovim Plugin Template
+<h1 align="center">
+  <img src="https://i.postimg.cc/0QL5cs9T/carbonvim.jpg" />
+</h1>
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ellisonleao/nvim-plugin-template/default?style=for-the-badge)
-![Lua](https://img.shields.io/badge/Made%20with%20Lua-blueviolet.svg?style=for-the-badge&logo=lua)
+<div align="center">
+  <p><strong>Create beautiful code snippets directly from your neovim terminal</strong></p>
+  <img src="https://img.shields.io/badge/Made%20with%20Lua-blueviolet.svg?style=for-the-badge&logo=lua" />
+  <img src="https://img.shields.io/github/workflow/status/ellisonleao/carbon-now.nvim/default?style=for-the-badge" />
+</div>
 
-A template repository for Neovim plugins.
+## Requirements
 
-## Using it
+Neovim 0.6 or higher
 
-Via `gh`:
+## Installing
 
-```
-$ gh repo create my-plugin -p ellisonleao/nvim-plugin-template
-```
-
-Via github web page:
-
-Click on `Use this template`
-
-![](https://docs.github.com/assets/cb-36544/images/help/repository/use-this-template-button.png)
-
-## Features and structure
-
-- 100% Lua
-- Github actions to run tests and check for formatting errors (Stylua)
-- Tests created with [busted](https://olivinelabs.com/busted/) + [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
-
-### Plugin structure
+Using your preferred plugin manager, add:
 
 ```
-.
-├── lua
-│   ├── plugin_name
-│   │   └── module.lua
-│   └── plugin_name.lua
-├── Makefile
-├── plugin
-│   └── plugin_name.lua
-├── README.md
-├── tests
-│   ├── minimal_vim.vim
-│   └── plugin_name
-│       └── plugin_name_spec.lua
-└── vendor
+'ellisonleao/carbon-now.nvim'
+```
+
+Example with packer:
+
+```lua
+use {"ellisonleao/carbon-now.nvim", config = function() require('carbon-now').setup() end}
+```
+
+## Configuration and customization
+
+The plugin comes with the following default configs:
+
+```lua
+local defaults = {
+  base_url = "https://carbon.now.sh/",
+  open_cmd = "xdg-open",
+  options = {
+    theme = "monokai",
+    window_theme = "none",
+    font_family = "Hack",
+    font_size = "18px",
+    bg = "gray",
+    line_numbers = true,
+    line_height = "133%",
+    drop_shadow = false,
+    drop_shadow_offset_y = "20px",
+    drop_shadow_blur = "68px",
+    width = "680",
+    watermark = false,
+  },
+}
+```
+
+You can override it in `setup()` function. Example:
+
+```lua
+local carbon = require('carbon-now')
+carbon.setup({
+  options = {
+    theme = "solarized",
+    font_family = "Monoid",
+  }
+})
+```
+
+## Generating snippets from visual selection
+
+Adding a custom mapping for generating a new snippet is really easy
+
+```lua
+-- nvim 0.7.x
+vim.keymap.set("v", "<leader>cn", function() require('carbon-now').create_snippet() end, { noremap = true, silent = true})
+
+-- nvim 0.6.x
+vim.api.nvim_set_keymap("v", "<leader>cn", "<Cmd>CarbonNow<CR>", { noremap = true, silent = true})
+```
+
+## Generating snippets from github gists
+
+In lua you can call:
+
+```lua
+:lua require('carbon-now').create_snippet_from_gist('<GIST_ID>')
+```
+
+But if you preferer a vim command, just call
+
+```
+:CarbonNowGist GIST_ID
+```
+
+## Changing default open in browser command
+
+Example: Opening snippet in google-chrome
+
+```lua
+require('carbon-now').setup({open_cmd = "google-chrome"})
 ```
