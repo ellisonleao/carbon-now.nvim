@@ -118,7 +118,6 @@ M.setup = function(params)
   M.config = vim.tbl_deep_extend("force", {}, defaults, params or {})
   create_commands()
   is_loaded = true
-  print("is loaded called")
 end
 
 M.create_snippet = function()
