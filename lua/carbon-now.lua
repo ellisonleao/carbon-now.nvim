@@ -122,7 +122,7 @@ end
 
 M.create_snippet = function()
   if not is_loaded then
-    vim.api.nvim_err_writeln("setup() method must be called in order to create snippets")
+    vim.notify("setup() method must be called in order to create snippets", vim.log.levels.ERROR)
     return
   end
 
