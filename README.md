@@ -10,7 +10,7 @@
 
 ## Requirements
 
-Neovim 0.6 or higher
+Neovim 0.7+
 
 ## Installing
 
@@ -31,7 +31,7 @@ use {"ellisonleao/carbon-now.nvim", config = function() require('carbon-now').se
 The plugin comes with the following default configs:
 
 ```lua
-local defaults = {
+{
   base_url = "https://carbon.now.sh/",
   open_cmd = "xdg-open",
   options = {
@@ -68,11 +68,13 @@ carbon.setup({
 Adding a custom mapping for generating a new snippet is really easy
 
 ```lua
--- nvim 0.7.x
-vim.keymap.set("v", "<leader>cn", function() require('carbon-now').create_snippet() end, { noremap = true, silent = true})
+vim.keymap.set("v", "<leader>cn", ":CarbonNow<CR>", { noremap = true, silent = true})
+```
 
--- nvim 0.6.x
-vim.api.nvim_set_keymap("v", "<leader>cn", "<Cmd>CarbonNow<CR>", { noremap = true, silent = true})
+But if you preferer a command, visual select the code you want to share and call:
+
+```
+:CarbonNow
 ```
 
 ## Generating snippets from github gists
@@ -83,7 +85,7 @@ In lua you can call:
 :lua require('carbon-now').create_snippet_from_gist('<GIST_ID>')
 ```
 
-But if you preferer a vim command, just call
+But if you preferer a command, just call
 
 ```
 :CarbonNowGist GIST_ID
