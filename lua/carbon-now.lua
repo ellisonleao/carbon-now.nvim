@@ -88,7 +88,7 @@ local function get_open_command()
 end
 
 local function create_snippet(opts)
-  local lines = vim.api.nvim_buf_get_lines(0, opts.line1, opts.line2, false)
+  local lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, false)
   lines = table.concat(lines, "\n", 1, #lines)
 
   local open_cmd = get_open_command()
