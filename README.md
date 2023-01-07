@@ -5,12 +5,12 @@
 <div align="center">
   <p><strong>Create beautiful code snippets directly from your neovim terminal</strong></p>
   <img src="https://img.shields.io/badge/Made%20with%20Lua-blueviolet.svg?style=for-the-badge&logo=lua" />
-  <img src="https://img.shields.io/github/workflow/status/ellisonleao/carbon-now.nvim/default?style=for-the-badge" />
+  <img src="https://img.shields.io/github/actions/workflow/status/ellisonleao/carbon-now.nvim/default.yml?style=for-the-badge" />
 </div>
 
 ## Requirements
 
-Neovim 0.7+
+Neovim 0.8+
 
 ## Installing
 
