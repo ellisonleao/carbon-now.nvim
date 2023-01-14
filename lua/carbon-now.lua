@@ -88,12 +88,20 @@ local function get_open_command()
 end
 
 local function create_snippet(opts)
-  local lines = vim.api.nvim_buf_get_lines(0, opts.line1, opts.line2, false)
-  lines = table.concat(lines, "\n", 1, #lines)
-
   local open_cmd = get_open_command()
-  local query_params = generate_query_params(lines)
-  local url = carbon.config.base_url .. "?" .. query_params
+  local url
+  local query_params
+
+  if opts.args ~= "" then
+    query_params = generate_query_params()
+    url = carbon.config.base_url .. "/" .. opts.args .. "?" .. query_params
+  else
+    local range = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, false)
+    local lines = table.concat(range, "\n", 1, #range)
+    query_params = generate_query_params(lines)
+    url = carbon.config.base_url .. "?" .. query_params
+  end
+
   local cmd = open_cmd .. " " .. "'" .. url .. "'"
   vim.fn.system(cmd)
 end
@@ -101,24 +109,13 @@ end
 local function create_commands()
   vim.api.nvim_create_user_command("CarbonNow", function(opts)
     create_snippet(opts)
-  end, { range = "%" })
-  vim.api.nvim_create_user_command("CarbonNowGist", function(opts)
-    carbon.create_snippet_from_gist(opts.fargs)
-  end, { nargs = 1 })
+  end, { range = "%", nargs = "?" })
 end
 
 -- setup is the initialization function for the carbon plugin
 carbon.setup = function(params)
   carbon.config = vim.tbl_deep_extend("force", {}, carbon.config, params or {})
   create_commands()
-end
-
-carbon.create_snippet_from_gist = function(gist_id)
-  local open_cmd = get_open_command()
-  local query_params = generate_query_params()
-  local url = carbon.config.base_url .. "/" .. gist_id .. "?" .. query_params
-  local cmd = open_cmd .. " " .. "'" .. url .. "'"
-  vim.fn.system(cmd)
 end
 
 return carbon

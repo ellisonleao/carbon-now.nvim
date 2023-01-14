@@ -26,6 +26,12 @@ Example with packer:
 use {"ellisonleao/carbon-now.nvim", config = function() require('carbon-now').setup() end}
 ```
 
+Example with lazy.nvim:
+
+```lua
+{"ellisonleao/carbon-now.nvim", opts = { [[ your custom config here ]] } cmd = "CarbonNow" }
+```
+
 ## Configuration and customization
 
 The plugin comes with the following default configs:
@@ -68,7 +74,7 @@ carbon.setup({
 Adding a custom mapping for generating a new snippet is really easy
 
 ```lua
-vim.keymap.set("v", "<leader>cn", ":CarbonNow<CR>", { noremap = true, silent = true})
+vim.keymap.set("v", "<leader>cn", ":CarbonNow<CR>", { silent = true })
 ```
 
 But if you preferer a command, visual select the code you want to share and call:
@@ -79,16 +85,8 @@ But if you preferer a command, visual select the code you want to share and call
 
 ## Generating snippets from github gists
 
-In lua you can call:
-
-```lua
-:lua require('carbon-now').create_snippet_from_gist('<GIST_ID>')
 ```
-
-But if you preferer a command, just call
-
-```
-:CarbonNowGist GIST_ID
+:CarbonNow GIST_ID
 ```
 
 ## Changing default open in browser command
