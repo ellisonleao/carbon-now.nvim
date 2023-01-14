@@ -1,11 +1,11 @@
-.PHONY: test prepare
+TESTS_INIT=tests/minimal_init.lua
+TESTS_DIR=tests/
 
-prepare:
-	@git clone https://github.com/nvim-lua/plenary.nvim vendor/plenary.nvim
+.PHONY: test
 
-test: prepare
+test:
 	@nvim \
 		--headless \
 		--noplugin \
-		-u tests/minimal_vim.vim \
-		-c "PlenaryBustedDirectory tests/ { minimal_init = 'tests/minimal_vim.vim' }"
+		-u ${TESTS_INIT} \
+		-c "PlenaryBustedDirectory ${TESTS_DIR} { minimal_init = '${TESTS_INIT}' }"
