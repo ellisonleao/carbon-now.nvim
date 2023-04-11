@@ -6,18 +6,19 @@ carbon.config = {
   base_url = "https://carbon.now.sh/",
   open_cmd = "xdg-open",
   options = {
-    theme = "monokai",
-    window_theme = "none",
-    font_family = "Hack",
-    font_size = "18px",
     bg = "gray",
-    line_numbers = true,
-    line_height = "133%",
+    drop_shadow_blur = "68px",
     drop_shadow = false,
     drop_shadow_offset_y = "20px",
-    drop_shadow_blur = "68px",
-    width = "680",
+    font_family = "Hack",
+    font_size = "18px",
+    line_height = "133%",
+    line_numbers = true,
+    theme = "monokai",
+    titlebar = "made with carbon-now.nvim",
     watermark = false,
+    width = "680",
+    window_theme = "sharp",
   },
 }
 
@@ -46,11 +47,15 @@ local function encode_params(values)
   return output
 end
 
+local function encode_theme(theme)
+  return string.lower(string.gsub(theme, " ", "-"))
+end
+
 -- validate config param values and create the query params table
 local function generate_query_params(code)
   local opts = carbon.config.options
   local params = {
-    t = opts.theme,
+    t = encode_theme(opts.theme),
     wt = opts.window_theme,
     fm = opts.font_family,
     fs = opts.font_size,
@@ -61,6 +66,7 @@ local function generate_query_params(code)
     dsyoff = opts.drop_shadow_offset_y,
     dsblur = opts.drop_shadow_blur,
     wm = opts.watermark,
+    tb = opts.titlebar,
   }
 
   if code ~= nil then
