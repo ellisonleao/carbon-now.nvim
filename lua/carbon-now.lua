@@ -5,6 +5,7 @@ local carbon = {}
 carbon.config = {
   base_url = "https://carbon.now.sh/",
   open_cmd = "xdg-open",
+  usereg = nil,
   options = {
     bg = "gray",
     drop_shadow_blur = "68px",
@@ -106,6 +107,10 @@ local function create_snippet(opts)
     local lines = table.concat(range, "\n", 1, #range)
     query_params = generate_query_params(lines)
     url = carbon.config.base_url .. "?" .. query_params
+  end
+
+  if carbon.config.usereg then
+    vim.fn.setreg(carbon.config.usereg, url)
   end
 
   local cmd = open_cmd .. " " .. "'" .. url .. "'"
