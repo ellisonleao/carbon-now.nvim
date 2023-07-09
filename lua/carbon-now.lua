@@ -4,7 +4,7 @@ local carbon = {}
 
 --- default configs
 ---@type cn.ConfigSchema
-carbon.config = {
+local default_config = {
   base_url = "https://carbon.now.sh/",
   open_cmd = "xdg-open",
   options = {
@@ -140,7 +140,7 @@ end
 --- initialization function for the carbon plugin commands
 ---@param params cn.ConfigSchema
 carbon.setup = function(params)
-  carbon.config = vim.tbl_deep_extend("force", {}, carbon.config, params or {})
+  carbon.config = vim.tbl_deep_extend("force", {}, default_config, params or {})
   create_commands()
 end
 
