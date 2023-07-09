@@ -29,7 +29,13 @@ use {"ellisonleao/carbon-now.nvim", config = function() require('carbon-now').se
 Example with lazy.nvim:
 
 ```lua
-{"ellisonleao/carbon-now.nvim", opts = { [[ your custom config here ]] } cmd = "CarbonNow" }
+{
+  "ellisonleao/carbon-now.nvim",
+  lazy = true,
+  cmd = "CarbonNow",
+  ---@param opts cn.ConfigSchema
+  opts = { [[ your custom config here ]] }
+}
 ```
 
 ## Configuration and customization
