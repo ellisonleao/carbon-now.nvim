@@ -47,9 +47,9 @@ local function encode_params(values)
   ---@type table<string, any>
   local params = {}
   for k, v in pairs(values) do
-    local parsedValue = tostring(v)
-    local encodedValue = query_param_encode(parsedValue)
-    table.insert(params, k .. "=" .. encodedValue)
+    local parsed_value = tostring(v)
+    local encoded_value = query_param_encode(parsed_value)
+    table.insert(params, k .. "=" .. encoded_value)
   end
 
   return table.concat(params, "&")
