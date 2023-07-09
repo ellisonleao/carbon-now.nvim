@@ -1,5 +1,5 @@
 local carbon = require("carbon-now")
-local default_config = carbon.config
+local default_config = require("config.default")
 
 describe("setup", function()
   it("can be required", function()

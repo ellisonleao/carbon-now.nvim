@@ -1,28 +1,6 @@
 -- module represents a lua module for the plugin
-local types = require("types")
+local default_config = require("config.default")
 local carbon = {}
-
---- default configs
----@type cn.ConfigSchema
-local default_config = {
-  base_url = "https://carbon.now.sh/",
-  open_cmd = "xdg-open",
-  options = {
-    bg = "gray",
-    drop_shadow_blur = "68px",
-    drop_shadow = false,
-    drop_shadow_offset_y = "20px",
-    font_family = "Hack",
-    font_size = "18px",
-    line_height = "133%",
-    line_numbers = true,
-    theme = types.cn.Themes.monokai,
-    titlebar = "Made with carbon-now.nvim",
-    watermark = false,
-    width = "680",
-    window_theme = types.cn.WindowThemes.sharp,
-  },
-}
 
 ---encodes a given [str] string
 ---@param str string
@@ -138,7 +116,7 @@ local function create_commands()
 end
 
 --- initialization function for the carbon plugin commands
----@param params cn.ConfigSchema
+---@param params cn.ConfigSchema?
 carbon.setup = function(params)
   carbon.config = vim.tbl_deep_extend("force", {}, default_config, params or {})
   create_commands()
