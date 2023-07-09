@@ -81,7 +81,7 @@ local function get_open_command()
     return "start"
   end
 
-  error("Couldn't found a launch command")
+  error("Couldn't find a launch command")
 end
 
 ---@param opts {args: string, line1: integer, line2: integer}
