@@ -1,6 +1,28 @@
 -- module represents a lua module for the plugin
-local default_config = require("config.default")
+local types = require("types")
 local carbon = {}
+
+-- default config
+---@type cn.ConfigSchema
+carbon.config = {
+  base_url = "https://carbon.now.sh/",
+  open_cmd = "xdg-open",
+  options = {
+    bg = "gray",
+    drop_shadow_blur = "68px",
+    drop_shadow = false,
+    drop_shadow_offset_y = "20px",
+    font_family = "Hack",
+    font_size = "18px",
+    line_height = "133%",
+    line_numbers = true,
+    theme = types.Themes.monokai,
+    titlebar = "Made with carbon-now.nvim",
+    watermark = false,
+    width = "680",
+    window_theme = types.WindowThemes.sharp,
+  },
+}
 
 ---encodes a given [str] string
 ---@param str string
@@ -25,9 +47,10 @@ local function encode_params(values)
   ---@type table<string, any>
   local params = {}
   for k, v in pairs(values) do
-    local parsed_value = tostring(v)
-    local encoded_value = query_param_encode(parsed_value)
-    table.insert(params, k .. "=" .. encoded_value)
+    if type(v) ~= "string" then
+      v = tostring(v)
+    end
+    table.insert(params, k .. "=" .. query_param_encode(v))
   end
 
   return table.concat(params, "&")
@@ -81,7 +104,8 @@ local function get_open_command()
     return "start"
   end
 
-  error("Couldn't find a launch command")
+  vim.api.nvim_err_writeln("[carbon-now.nvim] Couldn't find a launch command")
+  return "echo"
 end
 
 ---@param opts {args: string, line1: integer, line2: integer}
@@ -118,7 +142,7 @@ end
 --- initialization function for the carbon plugin commands
 ---@param params cn.ConfigSchema?
 carbon.setup = function(params)
-  carbon.config = vim.tbl_deep_extend("force", {}, default_config, params or {})
+  carbon.config = vim.tbl_deep_extend("force", {}, carbon.config, params or {})
   create_commands()
 end
 
