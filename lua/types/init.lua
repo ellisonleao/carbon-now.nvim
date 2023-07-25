@@ -52,8 +52,8 @@ cn.Themes = {
 ---@field public font_family string
 ---@field public font_size string
 ---@field public line_height string
+---@field public line_numbers boolean
 ---@field public drop_shadow boolean
----@field public line_number boolean
 ---@field public theme cn.Themes
 ---@field public titlebar string
 ---@field public watermark boolean

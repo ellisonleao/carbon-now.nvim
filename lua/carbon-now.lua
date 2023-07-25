@@ -71,7 +71,7 @@ local function get_carbon_now_snapshot_uri(code)
     fm = opts.font_family,
     fs = opts.font_size,
     bg = opts.bg,
-    ln = opts.line_number,
+    ln = opts.line_numbers,
     lh = opts.line_height,
     ds = opts.drop_shadow,
     dsyoff = opts.drop_shadow_offset_y,
