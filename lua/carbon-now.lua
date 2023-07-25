@@ -1,7 +1,9 @@
 -- module represents a lua module for the plugin
+local types = require("types")
 local carbon = {}
 
--- default configs
+-- default config
+---@type cn.ConfigSchema
 carbon.config = {
   base_url = "https://carbon.now.sh/",
   open_cmd = "xdg-open",
@@ -14,15 +16,18 @@ carbon.config = {
     font_size = "18px",
     line_height = "133%",
     line_numbers = true,
-    theme = "monokai",
-    titlebar = "made with carbon-now.nvim",
+    theme = types.Themes.monokai,
+    titlebar = "Made with carbon-now.nvim",
     watermark = false,
     width = "680",
-    window_theme = "sharp",
+    window_theme = types.WindowThemes.sharp,
   },
 }
 
--- generates an query encoded string
+---encodes a given [str] string
+---@param str string
+---@return string str 'Encoded string'
+---@nodiscard
 local function query_param_encode(str)
   str = string.gsub(str, "\r?\n", "\r\n")
   str = string.gsub(str, "([^%w%-%.%_%~ ])", function(c)
@@ -33,8 +38,13 @@ local function query_param_encode(str)
   return str
 end
 
--- helper function to encode a k,v table into encoded query params
+---helper function to encode and concatenate a [k,v] table
+---as query parameters. iEx: {a = b, c = d} --> a=b&c=d
+---@param values table
+---@return string # Concatanation of the enconded query parameters
+---@nodiscard
 local function encode_params(values)
+  ---@type table<string, any>
   local params = {}
   for k, v in pairs(values) do
     if type(v) ~= "string" then
@@ -43,19 +53,20 @@ local function encode_params(values)
     table.insert(params, k .. "=" .. query_param_encode(v))
   end
 
-  local output = table.concat(params, "&")
-  return output
+  return table.concat(params, "&")
 end
 
-local function encode_theme(theme)
-  return string.lower(string.gsub(theme, " ", "-"))
-end
-
--- validate config param values and create the query params table
-local function generate_query_params(code)
+---@param code string?
+---@return string # global parameters for the endpoint
+---@nodiscard
+---validate config param values and create the query params table
+local function get_carbon_now_snapshot_uri(code)
   local opts = carbon.config.options
+
+  -- carbon.now.sh parameters
   local params = {
-    t = encode_theme(opts.theme),
+    t = opts.theme,
+    l = vim.bo.filetype,
     wt = opts.window_theme,
     fm = opts.font_family,
     fs = opts.font_size,
@@ -67,22 +78,23 @@ local function generate_query_params(code)
     dsblur = opts.drop_shadow_blur,
     wm = opts.watermark,
     tb = opts.titlebar,
+    code = code,
   }
-
-  if code ~= nil then
-    params.code = code
-    params.l = vim.bo.filetype
-  end
 
   return encode_params(params)
 end
 
+---@nodiscard
+---@return string
+--- Returns the launch command. If no launch command is
+--- available an exception will be raised.
 local function get_open_command()
+  -- default launcher
   if vim.fn.executable(carbon.config.open_cmd) then
     return carbon.config.open_cmd
   end
 
-  -- fallbacks
+  -- alternative launcher
   if vim.fn.executable("open") then
     return "open"
   end
@@ -91,34 +103,44 @@ local function get_open_command()
   if vim.fn.has("win32") then
     return "start"
   end
+
+  vim.api.nvim_err_writeln("[carbon-now.nvim] Couldn't find a launch command")
+  return "echo"
 end
 
-local function create_snippet(opts)
+---@param opts {args: string, line1: integer, line2: integer}
+local function create_snapshot(opts)
+  -- get launch command
   local open_cmd = get_open_command()
-  local url
-  local query_params
 
+  ---@type string, string
+  local url, query_params
+
+  -- create Uri
   if opts.args ~= "" then
-    query_params = generate_query_params()
+    query_params = get_carbon_now_snapshot_uri()
     url = carbon.config.base_url .. "/" .. opts.args .. "?" .. query_params
   else
     local range = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, false)
-    local lines = table.concat(range, "\n", 1, #range)
-    query_params = generate_query_params(lines)
+    local code = table.concat(range, "\n", 1, #range)
+    query_params = get_carbon_now_snapshot_uri(code)
     url = carbon.config.base_url .. "?" .. query_params
   end
 
+  -- launch the Uri
   local cmd = open_cmd .. " " .. "'" .. url .. "'"
   vim.fn.system(cmd)
 end
 
 local function create_commands()
+  ---@param opts table<string, any>
   vim.api.nvim_create_user_command("CarbonNow", function(opts)
-    create_snippet(opts)
+    create_snapshot(opts)
   end, { range = "%", nargs = "?" })
 end
 
--- setup is the initialization function for the carbon plugin
+--- initialization function for the carbon plugin commands
+---@param params cn.ConfigSchema?
 carbon.setup = function(params)
   carbon.config = vim.tbl_deep_extend("force", {}, carbon.config, params or {})
   create_commands()

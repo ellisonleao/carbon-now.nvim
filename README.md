@@ -29,7 +29,13 @@ use {"ellisonleao/carbon-now.nvim", config = function() require('carbon-now').se
 Example with lazy.nvim:
 
 ```lua
-{"ellisonleao/carbon-now.nvim", opts = { [[ your custom config here ]] } cmd = "CarbonNow" }
+{
+  "ellisonleao/carbon-now.nvim",
+  lazy = true,
+  cmd = "CarbonNow",
+  ---@param opts cn.ConfigSchema
+  opts = { [[ your custom config here ]] }
+}
 ```
 
 ## Configuration and customization
@@ -41,18 +47,19 @@ The plugin comes with the following default configs:
   base_url = "https://carbon.now.sh/",
   open_cmd = "xdg-open",
   options = {
-    theme = "monokai",
-    window_theme = "none",
-    font_family = "Hack",
-    font_size = "18px",
     bg = "gray",
-    line_numbers = true,
-    line_height = "133%",
+    drop_shadow_blur = "68px",
     drop_shadow = false,
     drop_shadow_offset_y = "20px",
-    drop_shadow_blur = "68px",
-    width = "680",
+    font_family = "Hack",
+    font_size = "18px",
+    line_height = "133%",
+    line_numbers = true,
+    theme = "monokai",
+    titlebar = "Made with carbon-now.nvim",
     watermark = false,
+    width = "680",
+    window_theme = "sharp",
   },
 }
 ```
