@@ -1,9 +1,8 @@
----
 on: [push, pull_request]
-name: default
+name: lint-test
 
 jobs:
-  stylua:
+  lint:
     name: stylua
     runs-on: ubuntu-latest
     steps:
@@ -15,11 +14,11 @@ jobs:
           args: --color always --check lua
 
   test:
+    name: test
     runs-on: ubuntu-latest
     strategy:
       matrix:
         nvim-versions: ['stable', 'nightly']
-    name: test
     steps:
       - name: checkout
         uses: actions/checkout@v3
