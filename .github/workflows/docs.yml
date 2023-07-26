@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - docs
+name: docs
 
 jobs:
   docs:
