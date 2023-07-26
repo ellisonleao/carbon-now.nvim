@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - docs
+      - main
 name: docs
 
 jobs:
