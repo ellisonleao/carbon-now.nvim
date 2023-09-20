@@ -5,7 +5,7 @@
 <div align="center">
   <p><strong>Create beautiful code snippets directly from your neovim terminal</strong></p>
   <img src="https://img.shields.io/badge/Made%20with%20Lua-blueviolet.svg?style=for-the-badge&logo=lua" />
-  <img src="https://img.shields.io/github/actions/workflow/status/ellisonleao/carbon-now.nvim/default.yml?style=for-the-badge" />
+  <img src="https://img.shields.io/github/actions/workflow/status/ellisonleao/carbon-now.nvim/lint-test.yml?style=for-the-badge" />
 </div>
 
 ## Requirements
