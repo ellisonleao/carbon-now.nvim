@@ -61,7 +61,6 @@ The plugin comes with the following default configs:
     width = "680",
     window_theme = "sharp",
   },
-  language_map = {},
 }
 ```
 
@@ -103,14 +102,4 @@ Example: Opening snippet in google-chrome
 
 ```lua
 require('carbon-now').setup({open_cmd = "google-chrome"})
-```
-
-## Map a filetype to a Carbon [language](https://github.com/carbon-app/carbon/blob/2cbdcd0cc23d2d2f23736dd3cfbe94134b141191/lib/constants.js#L624-L1048)
-
-```lua
-require('carbon-now').setup({
-  language_map = {
-    -- vim_filetype = "carbon_language"
-  },
-})
 ```
