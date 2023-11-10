@@ -3,7 +3,8 @@ local types = require("types")
 local carbon = {}
 
 -- map some known filetypes to carbon.now.sh supported languages
-local language_map_base = {
+--- list of supported languages: https://github.com/carbon-app/carbon/blob/2cbdcd0cc23d2d2f23736dd3cfbe94134b141191/lib/constants.js#L624-L1048
+local language_map = {
   typescriptreact = "typescript",
   javascriptreact = "javascript",
 }
@@ -28,7 +29,6 @@ carbon.config = {
     width = "680",
     window_theme = types.WindowThemes.sharp,
   },
-  language_map = {},
 }
 
 ---encodes a given [str] string
@@ -63,27 +63,18 @@ local function encode_params(values)
   return table.concat(params, "&")
 end
 
----map filetypes to carbon.now.sh supported languages
----@param ft string the vim filetype
----@return string corresponding carbon.now.sh language
----@see list of supported languages https://github.com/carbon-app/carbon/blob/2cbdcd0cc23d2d2f23736dd3cfbe94134b141191/lib/constants.js#L624-L1048
-local function language_map(ft)
-  local lm = carbon.config.language_map
-  local user_ft = type(lm) == "function" and lm(ft) or lm[ft]
-  return user_ft or language_map_base[ft] or ft
-end
-
 ---@param code string?
 ---@return string # global parameters for the endpoint
 ---@nodiscard
 ---validate config param values and create the query params table
 local function get_carbon_now_snapshot_uri(code)
   local opts = carbon.config.options
+  local ft = vim.bo.filetype
 
   -- carbon.now.sh parameters
   local params = {
     t = opts.theme,
-    l = language_map(vim.bo.filetype),
+    l = language_map[ft] or ft,
     wt = opts.window_theme,
     fm = opts.font_family,
     fs = opts.font_size,
