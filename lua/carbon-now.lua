@@ -3,6 +3,13 @@ local types = require("types")
 local open = require("open-polyfill")
 local carbon = {}
 
+-- map some known filetypes to carbon.now.sh supported languages
+--- list of supported languages: https://github.com/carbon-app/carbon/blob/2cbdcd0cc23d2d2f23736dd3cfbe94134b141191/lib/constants.js#L624-L1048
+local language_map = {
+  typescriptreact = "typescript",
+  javascriptreact = "javascript",
+}
+
 -- default config
 ---@type cn.ConfigSchema
 carbon.config = {
@@ -63,11 +70,12 @@ end
 ---validate config param values and create the query params table
 local function get_carbon_now_snapshot_uri(code)
   local opts = carbon.config.options
+  local ft = vim.bo.filetype
 
   -- carbon.now.sh parameters
   local params = {
     t = opts.theme,
-    l = vim.bo.filetype,
+    l = language_map[ft] or ft,
     wt = opts.window_theme,
     fm = opts.font_family,
     fs = opts.font_size,
