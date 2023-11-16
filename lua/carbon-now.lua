@@ -1,5 +1,6 @@
 -- module represents a lua module for the plugin
 local types = require("types")
+local open = require("open-polyfill")
 local carbon = {}
 
 -- map some known filetypes to carbon.now.sh supported languages
@@ -13,7 +14,7 @@ local language_map = {
 ---@type cn.ConfigSchema
 carbon.config = {
   base_url = "https://carbon.now.sh/",
-  open_cmd = "xdg-open",
+  open_cmd = nil,
   options = {
     bg = "gray",
     drop_shadow_blur = "68px",
@@ -92,35 +93,8 @@ local function get_carbon_now_snapshot_uri(code)
   return encode_params(params)
 end
 
----@nodiscard
----@return string
---- Returns the launch command. If no launch command is
---- available an exception will be raised.
-local function get_open_command()
-  -- default launcher
-  if vim.fn.executable(carbon.config.open_cmd) then
-    return carbon.config.open_cmd
-  end
-
-  -- alternative launcher
-  if vim.fn.executable("open") then
-    return "open"
-  end
-
-  -- windows fallback
-  if vim.fn.has("win32") then
-    return "start"
-  end
-
-  vim.api.nvim_err_writeln("[carbon-now.nvim] Couldn't find a launch command")
-  return "echo"
-end
-
 ---@param opts {args: string, line1: integer, line2: integer}
 local function create_snapshot(opts)
-  -- get launch command
-  local open_cmd = get_open_command()
-
   ---@type string, string
   local url, query_params
 
@@ -136,8 +110,7 @@ local function create_snapshot(opts)
   end
 
   -- launch the Uri
-  local cmd = open_cmd .. " " .. "'" .. url .. "'"
-  vim.fn.system(cmd)
+  open(url, carbon.config.open_cmd)
 end
 
 local function create_commands()
