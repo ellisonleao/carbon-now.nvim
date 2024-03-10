@@ -10,7 +10,7 @@ jobs:
       - uses: JohnnyMorganz/stylua-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          verson: latest
+          version: latest
           args: --color always --check lua
 
   test:
