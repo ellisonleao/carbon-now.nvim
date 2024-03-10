@@ -1,4 +1,4 @@
-*carbon-now.nvim.txt*     For Neovim >= 0.8.0    Last change: 2023 November 11
+*carbon-now.nvim.txt*      For Neovim >= 0.8.0      Last change: 2024 March 10
 
 ==============================================================================
 Table of Contents                          *carbon-now.nvim-table-of-contents*
@@ -65,6 +65,8 @@ The plugin comes with the following default configs:
         watermark = false,
         width = "680",
         window_theme = "sharp",
+        padding_horizontal = "0px",
+        padding_vertical = "0px",
       },
     }
 <
