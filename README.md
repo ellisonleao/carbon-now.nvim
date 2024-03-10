@@ -60,6 +60,8 @@ The plugin comes with the following default configs:
     watermark = false,
     width = "680",
     window_theme = "sharp",
+    padding_horizontal = "0px",
+    padding_vertical = "0px",
   },
 }
 ```

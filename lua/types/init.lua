@@ -59,5 +59,7 @@ cn.Themes = {
 ---@field public watermark boolean
 ---@field public width string
 ---@field public window_theme cn.WindowThemes
+---@field public padding_vertical string
+---@field public padding_horizontal string
 
 return cn

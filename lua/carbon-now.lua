@@ -1,6 +1,6 @@
 -- module represents a lua module for the plugin
 local types = require("types")
-local carbon = {}
+local Carbon = {}
 
 -- map some known filetypes to carbon.now.sh supported languages
 --- list of supported languages: https://github.com/carbon-app/carbon/blob/2cbdcd0cc23d2d2f23736dd3cfbe94134b141191/lib/constants.js#L624-L1048
@@ -11,7 +11,7 @@ local language_map = {
 
 -- default config
 ---@type cn.ConfigSchema
-carbon.config = {
+Carbon.config = {
   base_url = "https://carbon.now.sh/",
   open_cmd = "xdg-open",
   options = {
@@ -28,6 +28,8 @@ carbon.config = {
     watermark = false,
     width = "680",
     window_theme = types.WindowThemes.sharp,
+    padding_horizontal = "0px",
+    padding_vertical = "0px",
   },
 }
 
@@ -68,7 +70,7 @@ end
 ---@nodiscard
 ---validate config param values and create the query params table
 local function get_carbon_now_snapshot_uri(code)
-  local opts = carbon.config.options
+  local opts = Carbon.config.options
   local ft = vim.bo.filetype
 
   -- carbon.now.sh parameters
@@ -87,6 +89,8 @@ local function get_carbon_now_snapshot_uri(code)
     wm = opts.watermark,
     tb = opts.titlebar,
     code = code,
+    pv = opts.padding_vertical,
+    ph = opts.padding_horizontal,
   }
 
   return encode_params(params)
@@ -98,8 +102,8 @@ end
 --- available an exception will be raised.
 local function get_open_command()
   -- default launcher
-  if vim.fn.executable(carbon.config.open_cmd) then
-    return carbon.config.open_cmd
+  if vim.fn.executable(Carbon.config.open_cmd) then
+    return Carbon.config.open_cmd
   end
 
   -- alternative launcher
@@ -127,12 +131,12 @@ local function create_snapshot(opts)
   -- create Uri
   if opts.args ~= "" then
     query_params = get_carbon_now_snapshot_uri()
-    url = carbon.config.base_url .. "/" .. opts.args .. "?" .. query_params
+    url = Carbon.config.base_url .. "/" .. opts.args .. "?" .. query_params
   else
     local range = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, false)
     local code = table.concat(range, "\n", 1, #range)
     query_params = get_carbon_now_snapshot_uri(code)
-    url = carbon.config.base_url .. "?" .. query_params
+    url = Carbon.config.base_url .. "?" .. query_params
   end
 
   -- launch the Uri
@@ -149,9 +153,9 @@ end
 
 --- initialization function for the carbon plugin commands
 ---@param params cn.ConfigSchema?
-carbon.setup = function(params)
-  carbon.config = vim.tbl_deep_extend("force", {}, carbon.config, params or {})
+Carbon.setup = function(params)
+  Carbon.config = vim.tbl_deep_extend("force", {}, Carbon.config, params or {})
   create_commands()
 end
 
-return carbon
+return Carbon
