@@ -102,17 +102,17 @@ end
 --- available an exception will be raised.
 local function get_open_command()
   -- default launcher
-  if vim.fn.executable(Carbon.config.open_cmd) then
+  if vim.fn.executable(Carbon.config.open_cmd) == 1 then
     return Carbon.config.open_cmd
   end
 
   -- alternative launcher
-  if vim.fn.executable("open") then
+  if vim.fn.executable("open") == 1 then
     return "open"
   end
 
   -- windows fallback
-  if vim.fn.has("win32") then
+  if vim.fn.has("win32") == 1 then
     return "start"
   end
 
