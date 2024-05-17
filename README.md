@@ -45,7 +45,6 @@ The plugin comes with the following default configs:
 ```lua
 {
   base_url = "https://carbon.now.sh/",
-  open_cmd = "xdg-open",
   options = {
     bg = "gray",
     drop_shadow_blur = "68px",
@@ -96,12 +95,3 @@ But if you preferer a command, visual select the code you want to share and call
 
 ```
 :CarbonNow GIST_ID
-```
-
-## Changing default open in browser command
-
-Example: Opening snippet in google-chrome
-
-```lua
-require('carbon-now').setup({open_cmd = "google-chrome"})
-```
