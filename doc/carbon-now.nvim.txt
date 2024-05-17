@@ -1,4 +1,4 @@
-*carbon-now.nvim.txt*      For Neovim >= 0.8.0      Last change: 2024 March 10
+*carbon-now.nvim.txt*       For Neovim >= 0.8.0       Last change: 2024 May 17
 
 ==============================================================================
 Table of Contents                          *carbon-now.nvim-table-of-contents*
@@ -13,7 +13,7 @@ Table of Contents                          *carbon-now.nvim-table-of-contents*
 
 REQUIREMENTS                                    *carbon-now.nvim-requirements*
 
-Neovim 0.8+
+Neovim 0.10+
 
 
 INSTALLING                                        *carbon-now.nvim-installing*
