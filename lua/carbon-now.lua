@@ -1,19 +1,47 @@
 -- module represents a lua module for the plugin
-local types = require("types")
+---@module 'carbon-now'
+---@class Carbon
+---@field config ConfigSchema
+---@field setup SetupFunc
 local Carbon = {}
+
+--- Types
+---@alias Themes '3024-night' | 'a11y-dark' | 'blackboard' | 'base-16-dark' | 'base-16-light' | 'cobalt' | 'dracula-pro' | 'duotone' | 'hopscotch' | 'lucario' | 'material' | 'monokai' | 'night-owl' | 'nord' | 'oceanic-next' | 'one-light' | 'one-dark' | 'panda' | 'paraiso' | 'seti' | 'shades-of-purple' | 'solarized-dark' | 'solarized-light' | 'synthwave-84' | 'twilight' | 'terminal' | 'vscode' | 'yeti' | 'zenburn'
+
+---@class WindowOptions
+---@field public bg string
+---@field public drop_shadow_blur string
+---@field public drop_shadow_offset_y string
+---@field public font_family string
+---@field public font_size string
+---@field public line_height string
+---@field public line_numbers boolean
+---@field public drop_shadow boolean
+---@field public theme Themes
+---@field public titlebar string
+---@field public watermark boolean
+---@field public width string
+---@field public window_theme 'none' | 'sharp' | 'bw' | 'boxy'
+---@field public padding_vertical string
+---@field public padding_horizontal string
+
+---@class ConfigSchema
+---@field public base_url string
+---@field public options WindowOptions
+
+---@alias SetupFunc fun(params: ConfigSchema)
 
 -- map some known filetypes to carbon.now.sh supported languages
 --- list of supported languages: https://github.com/carbon-app/carbon/blob/2cbdcd0cc23d2d2f23736dd3cfbe94134b141191/lib/constants.js#L624-L1048
+--- TODO: check possible removal of this in favor of vim.filetype
 local language_map = {
   typescriptreact = "typescript",
   javascriptreact = "javascript",
 }
 
 -- default config
----@type cn.ConfigSchema
 Carbon.config = {
   base_url = "https://carbon.now.sh/",
-  open_cmd = "xdg-open",
   options = {
     bg = "gray",
     drop_shadow_blur = "68px",
@@ -23,11 +51,11 @@ Carbon.config = {
     font_size = "18px",
     line_height = "133%",
     line_numbers = true,
-    theme = types.Themes.monokai,
+    theme = "monokai",
     titlebar = "Made with carbon-now.nvim",
     watermark = false,
     width = "680",
-    window_theme = types.WindowThemes.sharp,
+    window_theme = "sharp",
     padding_horizontal = "0px",
     padding_vertical = "0px",
   },
@@ -48,9 +76,9 @@ local function query_param_encode(str)
 end
 
 ---helper function to encode and concatenate a [k,v] table
----as query parameters. iEx: {a = b, c = d} --> a=b&c=d
+---as query parameters. Ex: {a = b, c = d} --> a=b&c=d
 ---@param values table
----@return string # Concatanation of the enconded query parameters
+---@return string # Concatenation of the encoded query parameters
 ---@nodiscard
 local function encode_params(values)
   ---@type table<string, any>
@@ -96,35 +124,8 @@ local function get_carbon_now_snapshot_uri(code)
   return encode_params(params)
 end
 
----@nodiscard
----@return string
---- Returns the launch command. If no launch command is
---- available an exception will be raised.
-local function get_open_command()
-  -- default launcher
-  if vim.fn.executable(Carbon.config.open_cmd) then
-    return Carbon.config.open_cmd
-  end
-
-  -- alternative launcher
-  if vim.fn.executable("open") then
-    return "open"
-  end
-
-  -- windows fallback
-  if vim.fn.has("win32") then
-    return "start"
-  end
-
-  vim.api.nvim_err_writeln("[carbon-now.nvim] Couldn't find a launch command")
-  return "echo"
-end
-
 ---@param opts {args: string, line1: integer, line2: integer}
 local function create_snapshot(opts)
-  -- get launch command
-  local open_cmd = get_open_command()
-
   ---@type string, string
   local url, query_params
 
@@ -140,19 +141,16 @@ local function create_snapshot(opts)
   end
 
   -- launch the Uri
-  local cmd = open_cmd .. " " .. "'" .. url .. "'"
-  vim.fn.system(cmd)
+  vim.ui.open(url)
 end
 
 local function create_commands()
-  ---@param opts table<string, any>
   vim.api.nvim_create_user_command("CarbonNow", function(opts)
     create_snapshot(opts)
   end, { range = "%", nargs = "?" })
 end
 
 --- initialization function for the carbon plugin commands
----@param params cn.ConfigSchema?
 Carbon.setup = function(params)
   Carbon.config = vim.tbl_deep_extend("force", {}, Carbon.config, params or {})
   create_commands()
